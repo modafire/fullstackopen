@@ -1,5 +1,21 @@
 import { useState } from 'react'
 
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function maxIndex(arr) {
+  let maxIndex = 0
+  for (let i =  1; i < arr.length; i++) {
+    if (arr[i] > arr[maxIndex]) {
+      maxIndex = i
+    }
+  }
+  return maxIndex
+} 
+
+
 const Button = ({onClick, text}) => (
   <button onClick={onClick}>
     {text}
@@ -17,20 +33,32 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
  
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
+  const initVotes = Array(anecdotes.length).fill(0)
 
-  
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(initVotes)
+  const [top, setTop] = useState(null)
+  
 
   const randomDote = () => setSelected(getRandomInt(anecdotes.length))
-  
-  console.log({selected})
+  const voteDote = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1 
+    console.log('Vote Matrix' , newVotes)
+    setVotes(newVotes)
+    setTop(maxIndex(newVotes))
+    console.log('Top',top)
+  }
+
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button onClick = {randomDote}  text="New Anecdote" />
+      <Button onClick = {randomDote}  text="New Anecdote" /> 
+      <Button onClick = {voteDote} text="Updoot" /> 
+      <p>{votes[selected]} Votes for this 'Dote</p>
+      <h1>The Most Voted 'Dote</h1>
+      <p>{anecdotes[top]}</p>
     </div>
   )
 }
